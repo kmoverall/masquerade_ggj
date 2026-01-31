@@ -6,17 +6,37 @@ public class PartyGoer : MonoBehaviour
 {
     public enum CurrentState
     {
-        Wander
+        Wander,
+        Inspect,
+        Talk,
+        Interrogate
     }
     private CurrentState _state;
     [SerializeField]
-    private Collider _target;
+    private CapsuleCollider _target;
 
     private bool _hasTarget = false;
+    private bool _reachedTarget = false;
 
-    private const float WANDER_DISTANCE = 1f;
+    private const float WANDER_DISTANCE = 1.5f;
     private const float WANDER_SPEED = 0.67f;
-    private const float WANDER_WAIT_TIME = 1.5f;
+    private const float WANDER_WAIT_TIME = 2f;
+
+    public void SetWander()
+    {
+        _state = CurrentState.Wander;
+    }
+    public void SetInspect(Transform target)
+    {
+        _state = CurrentState.Inspect;
+        _target.transform.position = target.position;
+    }
+    public void SetTalk(PartyGoer target)
+    {
+        _state = CurrentState.Talk;
+        var pos = (transform.position + target.transform.position) * 0.5f;
+        _target.transform.position = pos;
+    }
 
     // Update is called once per frame
     void Update()
@@ -25,6 +45,10 @@ public class PartyGoer : MonoBehaviour
         {
             case CurrentState.Wander:
                 Wander();
+                break;
+            case CurrentState.Inspect:
+            case CurrentState.Talk:
+                MoveToTarget();
                 break;
         }
     }
@@ -46,20 +70,32 @@ public class PartyGoer : MonoBehaviour
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WANDER_SPEED * Time.deltaTime);
     }
 
+    private void MoveToTarget()
+    {
+        if (!_hasTarget || _reachedTarget)
+            return;
+
+        transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WANDER_SPEED * Time.deltaTime);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other != _target || !_hasTarget)
             return;
 
-        StartCoroutine(DelayRetarget(WANDER_WAIT_TIME));
+        _reachedTarget = true;
+
+        if (_state == CurrentState.Wander)
+            StartCoroutine(DelayRetarget(WANDER_WAIT_TIME));
+        else
+            _hasTarget = false;
     }
 
     private IEnumerator DelayRetarget(float delay)
     {
-        Debug.Log("Reached Target");
         yield return new WaitForSeconds(delay);
+        _reachedTarget = false;
         _hasTarget = false;
-        Debug.Log("Retargeting");
     }
 
     private Vector3 GetPointAtDistanceAway(float distance)
