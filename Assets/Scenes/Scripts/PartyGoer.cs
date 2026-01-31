@@ -4,14 +4,23 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PartyGoer : MonoBehaviour
 {
-    public enum CurrentState
+    public enum Role
+    {
+        None,
+        Killer,
+        Victim
+    }
+
+    public enum State
     {
         Wander,
         Inspect,
         Talk,
         Idle
     }
-    private CurrentState _state;
+
+    public Role role = Role.None;
+    private State _state = State.Idle;
     [SerializeField]
     private CapsuleCollider _target;
 
@@ -22,24 +31,22 @@ public class PartyGoer : MonoBehaviour
     private const float WANDER_SPEED = 0.67f;
     private const float WANDER_WAIT_TIME = 2f;
 
-    public bool isKiller = false;
-
     public void SetWander()
     {
-        _state = CurrentState.Wander;
+        _state = State.Wander;
     }
     public void SetPaused()
     {
-        _state = CurrentState.Idle;
+        _state = State.Idle;
     }
     public void SetInspect(Transform target)
     {
-        _state = CurrentState.Inspect;
+        _state = State.Inspect;
         _target.transform.position = target.position;
     }
     public void SetTalk(PartyGoer target)
     {
-        _state = CurrentState.Talk;
+        _state = State.Talk;
         var pos = (transform.position + target.transform.position) * 0.5f;
         _target.transform.position = pos;
     }
@@ -49,14 +56,14 @@ public class PartyGoer : MonoBehaviour
     {
         switch (_state)
         {
-            case CurrentState.Wander:
+            case State.Wander:
                 Wander();
                 break;
-            case CurrentState.Inspect:
-            case CurrentState.Talk:
+            case State.Inspect:
+            case State.Talk:
                 MoveToTarget();
                 break;
-            case CurrentState.Idle:
+            case State.Idle:
                 break;
         }
     }
@@ -93,7 +100,7 @@ public class PartyGoer : MonoBehaviour
 
         _reachedTarget = true;
 
-        if (_state == CurrentState.Wander)
+        if (_state == State.Wander)
             StartCoroutine(DelayRetarget(WANDER_WAIT_TIME));
         else
             _hasTarget = false;
