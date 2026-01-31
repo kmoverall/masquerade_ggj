@@ -1060,8 +1060,8 @@ MonoBehaviour:
   TALK_DISTANCE: 1
   DIRECTION_INTERVAL: 6
   DIRECTIONS_PER_INTERVAL: 3
-  _wanderWeight: 0
-  _inspectWeight: 0
+  _wanderWeight: 7
+  _inspectWeight: 2
   _talkWeight: 1
 --- !u!4 &1296654000 stripped
 Transform:
