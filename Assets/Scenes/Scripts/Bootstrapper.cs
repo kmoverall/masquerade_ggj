@@ -6,11 +6,12 @@ public class Bootstrapper : MonoBehaviour
     [SerializeField]
     private Room _room;
     [SerializeField]
-    private List<PartyGoer> _partyGoers;
+    private Spawner _spawner;
 
     void Awake()
     {
         Game.Room = _room;
-        Game.PartyGoers = _partyGoers;
+        Game.Spawner = _spawner;
+        _spawner.Init();
     }
 }

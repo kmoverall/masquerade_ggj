@@ -9,7 +9,7 @@ public class PartyGoer : MonoBehaviour
         Wander,
         Inspect,
         Talk,
-        Interrogate
+        Idle
     }
     private CurrentState _state;
     [SerializeField]
@@ -22,9 +22,15 @@ public class PartyGoer : MonoBehaviour
     private const float WANDER_SPEED = 0.67f;
     private const float WANDER_WAIT_TIME = 2f;
 
+    public bool isKiller = false;
+
     public void SetWander()
     {
         _state = CurrentState.Wander;
+    }
+    public void SetPaused()
+    {
+        _state = CurrentState.Idle;
     }
     public void SetInspect(Transform target)
     {
@@ -49,6 +55,8 @@ public class PartyGoer : MonoBehaviour
             case CurrentState.Inspect:
             case CurrentState.Talk:
                 MoveToTarget();
+                break;
+            case CurrentState.Idle:
                 break;
         }
     }

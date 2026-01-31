@@ -4,5 +4,6 @@ using System.Collections.Generic;
 public static class Game
 {
     public static Room Room;
-    public static List<PartyGoer> PartyGoers;
+    public static Spawner Spawner;
+    public static List<PartyGoer> PartyGoers = new();
 }
