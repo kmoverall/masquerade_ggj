@@ -54,7 +54,7 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     private int MAX_RAND_ATTEMPTS = 100;
 
-
+    public bool readyForDirection = true;
 
     public Transform InspectionTarget { get; private set; }
     public PartyGoer TalkTarget { get; private set; }
@@ -70,16 +70,19 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
         CurrentState = State.Wander;
         _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
         _currentWaitTime = Random.Range(0f, _targetWaitTime);
+        readyForDirection = true;
     }
 
     public void SetPaused()
     {
         CurrentState = State.Idle;
+        readyForDirection = true;
     }
 
     public void SetInspect(Transform target)
     {
         CurrentState = State.Inspect;
+        readyForDirection = false;
 
         InspectionTarget = target;
 
@@ -91,7 +94,9 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     public void SetTalk(PartyGoer target)
     {
+        readyForDirection = false;
         CurrentState = State.Talk;
+        TalkTarget = target;
         var pos = (transform.position + target.transform.position) * 0.5f;
         _target.transform.position = pos;
         _reachedTarget = false;
@@ -134,7 +139,9 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
             }
 
             if (attempts >= MAX_RAND_ATTEMPTS)
-                return;
+            {
+                point = Vector3.zero;
+            }
 
             _target.transform.position = point;
             _hasTarget = true;
@@ -168,9 +175,13 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
                 {
                     _animator.SetBool("IsInspecting", false);
                     Game.InteractionHappened?.Invoke(this, InspectionTarget);
+                    SetWander();
                 }
                 else if (CurrentState == State.Talk)
+                {
                     Game.ConversationHappened?.Invoke(this, TalkTarget);
+                    SetWander();
+                }
                 return;
             }
         }

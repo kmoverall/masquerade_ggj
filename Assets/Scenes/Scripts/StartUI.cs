@@ -11,4 +11,9 @@ public class StartUI : MonoBehaviour
         Time.timeScale = 1;
         Game.StartGame?.Invoke();
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

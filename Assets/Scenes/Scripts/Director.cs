@@ -100,6 +100,12 @@ public class Director : MonoBehaviour
             return;
 
         PartyGoer guest = Game.PartyGoers[target];
+        if (!guest.readyForDirection)
+        {
+            activated.Add(target);
+            return;
+        }
+
         int rand = Random.Range(0, _wanderWeight + _inspectWeight + _talkWeight);
         if (rand < _wanderWeight)
         {
@@ -139,16 +145,24 @@ public class Director : MonoBehaviour
             }
             else
             {
+                int attempts = 0;
                 int talkTarget = target;
-                while (talkTarget == target || activated.Contains(rand))
+                while ((talkTarget == target || activated.Contains(talkTarget) || !Game.PartyGoers[talkTarget].readyForDirection) && attempts < 50)
                 {
                     talkTarget = Random.Range(0, Game.PartyGoers.Count);
                 }
 
-                guest.SetTalk(Game.PartyGoers[talkTarget]);
-                Game.PartyGoers[talkTarget].SetTalk(guest);
+                if (attempts >= 50)
+                {
+                    guest.SetWander();
+                }
+                else
+                {
+                    guest.SetTalk(Game.PartyGoers[talkTarget]);
+                    Game.PartyGoers[talkTarget].SetTalk(guest);
 
-                activated.Add(talkTarget);
+                    activated.Add(talkTarget);
+                }
             }
         }
         else

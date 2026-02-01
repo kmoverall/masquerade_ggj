@@ -66,8 +66,10 @@ public class MurderTracker : MonoBehaviour
 
     private void CheckForMurderProgress(PartyGoer partyGoer, Transform target)
     {
-        if (partyGoer.role != PartyGoer.Role.Killer)
+        if (!((partyGoer.role == PartyGoer.Role.Killer && !IsKillNext) ||
+            (partyGoer.role == PartyGoer.Role.Victim && IsKillNext)))
             return;
+
 
         if (target == Game.MurderSteps[Game.MurderProgress])
             Game.MurderProgress++;
@@ -77,7 +79,7 @@ public class MurderTracker : MonoBehaviour
         if (partyGoer.role != PartyGoer.Role.Killer)
             return;
 
-        if (target == Game.MurderSteps[Game.MurderProgress])
+        if (target.transform == Game.MurderSteps[Game.MurderProgress])
             Game.MurderProgress++;
     }
 
