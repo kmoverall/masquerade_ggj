@@ -227,6 +227,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("Clicked!");
+        if (Game.Camera.IsZoomed)
+            return;
+
+        Game.SelectedPartyGoer = this;
+        Game.Camera.ZoomOnTarget(transform);
     }
 }

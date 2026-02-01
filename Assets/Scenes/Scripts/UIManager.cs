@@ -1,0 +1,53 @@
+using UnityEditor.Search;
+using UnityEngine;
+
+public class UIManager : MonoBehaviour
+{
+    [SerializeField]
+    private StartUI _startMenu;
+    [SerializeField]
+    private GameUI _gameUI;
+    [SerializeField]
+    private EndUI  _victoryScreen;
+    [SerializeField]
+    private EndUI _gameOverScreen;
+
+    private void Start()
+    {
+        _startMenu.gameObject.SetActive(true);
+        _gameUI.gameObject.SetActive(false);
+        _victoryScreen.gameObject.SetActive(false);
+        _gameOverScreen.gameObject.SetActive(false);
+
+        Game.StartGame += StartGame;
+        Game.StrikeOut += GameOverStrikeOut;
+        Game.MurderOccured += GameOverMurder;
+    }
+
+    private void StartGame()
+    {
+        _startMenu.gameObject.SetActive(false);
+        _gameUI.gameObject.SetActive(true);
+    }
+
+    private void GameOverStrikeOut()
+    {
+        Time.timeScale = 0;
+        _gameOverScreen.gameObject.SetActive(true);
+        _gameOverScreen.SetReason("The killer has escaped notice");
+
+    }
+    private void GameOverMurder()
+    {
+        Time.timeScale = 0;
+        _gameOverScreen.gameObject.SetActive(true);
+        _gameOverScreen.SetReason("The killer has succeeded in his plan");
+    }
+
+    private void OnDestroy()
+    {
+        Game.StartGame -= StartGame;
+        Game.StrikeOut -= GameOverStrikeOut;
+        Game.MurderOccured -= GameOverMurder;
+    }
+}
