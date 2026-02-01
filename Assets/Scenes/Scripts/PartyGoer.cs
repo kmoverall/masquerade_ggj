@@ -49,6 +49,7 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
     private int MAX_RAND_ATTEMPTS = 100;
 
     public Transform InspectionTarget { get; private set; }
+    public PartyGoer TalkTarget { get; private set; }
 
     public void SetWander()
     {
@@ -65,10 +66,6 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
     public void SetInspect(Transform target)
     {
         CurrentState = State.Inspect;
-        if (role == Role.Killer)
-        {
-            target = Game.MurderSteps[Game.MurderProgress];
-        }
 
         InspectionTarget = target;
 
@@ -133,7 +130,7 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     private void MoveToTarget()
     {
-        if (CurrentState == State.Inspect && !_inspectionComplete && _reachedTarget)
+        if (!_inspectionComplete && _reachedTarget)
         {
             if (_currentWaitTime < INSPECT_TIME)
             {
@@ -143,7 +140,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
             else
             {
                 _inspectionComplete = true;
-                Game.InteractionHappened?.Invoke(this, InspectionTarget);
+                if (CurrentState == State.Inspect)
+                    Game.InteractionHappened?.Invoke(this, InspectionTarget);
+                else if (CurrentState == State.Talk)
+                    Game.ConversationHappened?.Invoke(this, TalkTarget);
                 return;
             }
         }
@@ -170,10 +170,26 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
         Vector2 point2 = Random.insideUnitCircle.normalized * distance;
         Vector3 point3 = transform.position;
 
-        point3.x += point2.x;
-        point3.z += point2.y;
+        Vector3 result = new();
 
-        return point3;
+        result.x = point3.x + point2.x;
+        result.z = point3.z + point2.y;
+
+        // Flip the point chosen around until a position is found
+        if (!Game.Room.IsInside(result))
+        {
+            result.x = point3.x - point2.x;
+        }
+        if (!Game.Room.IsInside(result))
+        {
+            result.z = point3.z - point2.y;
+        }
+        if (!Game.Room.IsInside(result))
+        {
+            result.x = point3.x + point2.x;
+        }
+
+        return result;
     }
 
     public void OnPointerClick(PointerEventData eventData)

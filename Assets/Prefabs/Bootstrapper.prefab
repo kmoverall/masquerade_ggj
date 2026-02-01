@@ -54,6 +54,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  _murderTracker: {fileID: 0}
 --- !u!114 &1431204892903914332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -80,8 +81,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348bc1d0ee423b84e909888e535767ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Director
-  INSPECT_DISTANCE: 0.5
-  TALK_DISTANCE: 1
+  INSPECT_DISTANCE: 0.25
+  TALK_DISTANCE: 0.5
   DIRECTION_INTERVAL: 6
   DIRECTIONS_PER_INTERVAL: 3
   _wanderWeight: 7

@@ -17,7 +17,7 @@ public class Room : MonoBehaviour
                point.z >= Bounds.min.z && point.z <= Bounds.max.z;
     }
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
         Vector3[] corners = new Vector3[4]
