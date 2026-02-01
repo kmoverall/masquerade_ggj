@@ -8,6 +8,7 @@ public class StartUI : MonoBehaviour
 
     public void StartGame()
     {
+        Time.timeScale = 1;
         Game.StartGame?.Invoke();
     }
 }

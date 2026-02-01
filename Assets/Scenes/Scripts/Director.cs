@@ -61,6 +61,10 @@ public class Director : MonoBehaviour
 
     private void Update()
     {
+        // No Partygoers, we assume the game hasn't started
+        if (Game.PartyGoers.Count == 0)
+            return;
+
         if (DIRECTIONS_PER_INTERVAL > Game.PartyGoers.Count / 2)
         {
             Debug.LogError("Directions per interval must be half or less of the total partygoers!");

@@ -22,7 +22,10 @@ public class MurderTracker : MonoBehaviour
         Game.InteractionHappened += CheckForMurderProgress;
         Game.ConversationHappened += CheckForMurderProgress;
         Game.AccusationMade += AccuseTarget;
-
+    }
+    
+    public void SetupMurder()
+    {
         var murderSteps = _scenario.PrepSteps;
         murderSteps.Shuffle();
         murderSteps.Add(_scenario.BoobyTrap);

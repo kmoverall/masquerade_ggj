@@ -50,6 +50,7 @@ public class Spawner : MonoBehaviour
         }
 
         Game.Director.InitializePartyGoers();
+        Game.MurderTracker.SetupMurder();
     }
     private void OnDestroy()
     {
