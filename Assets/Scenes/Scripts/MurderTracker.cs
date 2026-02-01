@@ -92,11 +92,8 @@ public class MurderTracker : MonoBehaviour
         else
         {
             Game.Strikes++;
-            if (Game.Strikes < 3)
-            {
-                Game.AccusationFailed?.Invoke();
-            }
-            else
+            Game.AccusationFailed?.Invoke();
+            if (Game.Strikes >= 3)
             {
                 Game.StrikeOut?.Invoke();
             }

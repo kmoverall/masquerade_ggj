@@ -11,6 +11,8 @@ public class GameUI : MonoBehaviour
     private Button _accuseButton;
     [SerializeField]
     private Button _cancelButton;
+    [SerializeField]
+    private AudioSource _buzzerAudio;
 
     private void Start()
     {
@@ -32,6 +34,7 @@ public class GameUI : MonoBehaviour
 
     private void UpdateStrikes()
     {
+        _buzzerAudio.Play();
         for (int i = 0; i < _strikes.Count; i++)
         {
             _strikes[i].SetActive(i < Game.Strikes);
