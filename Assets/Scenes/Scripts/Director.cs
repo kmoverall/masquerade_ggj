@@ -72,6 +72,7 @@ public class Director : MonoBehaviour
         _directionTimer = 0;
 
         List<int> targets = new();
+        List<int> activated = new();
         for (int i = 0; i < DIRECTIONS_PER_INTERVAL; i++)
         {
             int rand = Random.Range(0, Game.PartyGoers.Count);
@@ -85,25 +86,40 @@ public class Director : MonoBehaviour
 
         for (int i = 0; i < targets.Count; i++)
         {
-            int rand = Random.Range(0, _wanderWeight + _inspectWeight + _talkWeight);
-            if (rand < _wanderWeight)
-            {
-                Game.PartyGoers[targets[i]].SetWander();
-            }
-            else if (rand < _wanderWeight + _inspectWeight)
-            {
-                int objRand = Random.Range(0, Game.Interactables.Count);
-                Game.PartyGoers[targets[i]].SetInspect(Game.Interactables[objRand]);
-            }
-            else if (i != 0)
-            {
-                Game.PartyGoers[targets[i]].SetTalk(Game.PartyGoers[i - 1]);
-                Game.PartyGoers[i - 1].SetTalk(Game.PartyGoers[targets[i]]);
-            }
-            else
-            {
-                Game.PartyGoers[targets[i]].SetWander();
-            }
+            if (Game.PartyGoers[i].role != PartyGoer.Role.Killer)
+                DirectGuest(i, activated);
         }
+    }
+
+    private void DirectGuest(int target, List<int> activated)
+    {
+        if (activated.Contains(target))
+            return;
+
+        int rand = Random.Range(0, _wanderWeight + _inspectWeight + _talkWeight);
+        if (rand < _wanderWeight)
+        {
+            Game.PartyGoers[target].SetWander();
+        }
+        else if (rand < _wanderWeight + _inspectWeight)
+        {
+            int objRand = Random.Range(0, Game.Interactables.Count);
+            Game.PartyGoers[target].SetInspect(Game.Interactables[objRand]);
+        }
+        else
+        {
+            int talkTarget = target;
+            while (talkTarget == target || activated.Contains(rand))
+            {
+                talkTarget = Random.Range(0, Game.PartyGoers.Count);
+            }
+            
+            Game.PartyGoers[target].SetTalk(Game.PartyGoers[talkTarget]);
+            Game.PartyGoers[talkTarget].SetTalk(Game.PartyGoers[target]);
+
+            activated.Add(talkTarget);
+        }
+
+        activated.Add(target);
     }
 }

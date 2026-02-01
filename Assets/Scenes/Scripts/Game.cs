@@ -16,4 +16,5 @@ public static class Game
     public static int MurderProgress = 0;
 
     public static Action<PartyGoer, Transform> InteractionHappened;
+    public static Action<PartyGoer, PartyGoer> ConversationHappened;
 }
