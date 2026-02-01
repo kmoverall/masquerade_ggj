@@ -21,13 +21,17 @@ public class Bootstrapper : MonoBehaviour
 
     void Awake()
     {
+        Game.Strikes = 0;
+        Game.MurderProgress = 0;
+        Game.PartyGoers = new();
+        Game.MurderSteps = new();
+
+
         Time.timeScale = 0;
 
         Game.Camera = _camera;
 
         Game.UI = _uiManager;
-        Game.Strikes = 0;
-        Game.MurderProgress = 0;
         Game.Room = _room;
         Game.Interactables = _interactables;
         Game.Spawner = _spawner;

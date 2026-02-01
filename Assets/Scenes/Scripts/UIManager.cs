@@ -22,12 +22,20 @@ public class UIManager : MonoBehaviour
         Game.StartGame += StartGame;
         Game.StrikeOut += GameOverStrikeOut;
         Game.MurderOccured += GameOverMurder;
+        Game.AccusationSuccess += Victory;
     }
 
     private void StartGame()
     {
         _startMenu.gameObject.SetActive(false);
         _gameUI.gameObject.SetActive(true);
+    }
+
+    private void Victory()
+    {
+        Time.timeScale = 0;
+        _victoryScreen.gameObject.SetActive(true);
+
     }
 
     private void GameOverStrikeOut()
