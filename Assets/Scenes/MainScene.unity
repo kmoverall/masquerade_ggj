@@ -2248,6 +2248,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 434599056}
     - target: {fileID: 5859071799039507899, guid: 07789640e925fc248835946e8cef2020, type: 3}
+      propertyPath: _murderTracker
+      value: 
+      objectReference: {fileID: 7984229875229725306}
+    - target: {fileID: 5859071799039507899, guid: 07789640e925fc248835946e8cef2020, type: 3}
       propertyPath: '_interactables.Array.data[0]'
       value: 
       objectReference: {fileID: 374525876}
@@ -2272,6 +2276,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 07789640e925fc248835946e8cef2020, type: 3}
+--- !u!114 &7984229875229725306 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 738354107127530942, guid: 07789640e925fc248835946e8cef2020, type: 3}
+  m_PrefabInstance: {fileID: 7984229875229725305}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c90f6dd4c7ace42bdbdec12a7d4851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MurderTracker
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
