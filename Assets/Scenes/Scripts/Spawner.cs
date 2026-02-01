@@ -9,6 +9,10 @@ public class Spawner : MonoBehaviour
     [SerializeField]
     private int PARTY_SIZE;
 
+    private void Awake()
+    {
+        Game.StartGame += Init;
+    }
     public void Init()
     {
         if (PARTY_SIZE < 2)
@@ -44,5 +48,12 @@ public class Spawner : MonoBehaviour
             }
             Game.PartyGoers.Add(newPartygoer);
         }
+
+        Game.Director.InitializePartyGoers();
+        Game.MurderTracker.SetupMurder();
+    }
+    private void OnDestroy()
+    {
+        Game.StartGame -= Init;
     }
 }

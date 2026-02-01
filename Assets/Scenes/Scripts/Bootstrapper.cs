@@ -13,16 +13,29 @@ public class Bootstrapper : MonoBehaviour
     private List<Transform> _interactables;
     [SerializeField]
     private MurderTracker _murderTracker;
+    [SerializeField]
+    private UIManager _uiManager;
+
+    [SerializeField]
+    private CameraController _camera;
 
     void Awake()
     {
+        Game.Strikes = 0;
+        Game.MurderProgress = 0;
+        Game.PartyGoers = new();
+        Game.MurderSteps = new();
+
+
+        Time.timeScale = 0;
+
+        Game.Camera = _camera;
+
+        Game.UI = _uiManager;
         Game.Room = _room;
         Game.Interactables = _interactables;
         Game.Spawner = _spawner;
         Game.Director = _director;
         Game.MurderTracker = _murderTracker;
-
-        _spawner.Init();
-        _director.InitializePartyGoers();
     }
 }

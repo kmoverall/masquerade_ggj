@@ -21,7 +21,11 @@ public class MurderTracker : MonoBehaviour
         _scenario = _scenarios.GetRandom();
         Game.InteractionHappened += CheckForMurderProgress;
         Game.ConversationHappened += CheckForMurderProgress;
-
+        Game.AccusationMade += AccuseTarget;
+    }
+    
+    public void SetupMurder()
+    {
         var murderSteps = _scenario.PrepSteps;
         murderSteps.Shuffle();
         murderSteps.Add(_scenario.BoobyTrap);
@@ -30,8 +34,6 @@ public class MurderTracker : MonoBehaviour
 
         Game.MurderSteps = murderSteps;
     }
-
-
 
     public bool IsPreparing
     {
@@ -79,9 +81,30 @@ public class MurderTracker : MonoBehaviour
             Game.MurderProgress++;
     }
 
+    private void AccuseTarget(PartyGoer target)
+    {
+        if (target == Game.Killer)
+        {
+            Game.AccusationSuccess?.Invoke();
+        }
+        else
+        {
+            Game.Strikes++;
+            if (Game.Strikes < 3)
+            {
+                Game.AccusationFailed?.Invoke();
+            }
+            else
+            {
+                Game.StrikeOut?.Invoke();
+            }
+        }
+    }
+
     private void OnDestroy()
     {
         Game.InteractionHappened -= CheckForMurderProgress;
         Game.ConversationHappened -= CheckForMurderProgress;
+        Game.AccusationMade -= AccuseTarget;
     }
 }
