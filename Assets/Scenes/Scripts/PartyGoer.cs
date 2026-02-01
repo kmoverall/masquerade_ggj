@@ -4,65 +4,99 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PartyGoer : MonoBehaviour
 {
-    public enum CurrentState
+    public enum Role
     {
+        None,
+        Killer,
+        Victim
+    }
+
+    public enum State
+    {
+        Idle,
         Wander,
         Inspect,
-        Talk,
-        Idle
+        Talk
     }
-    private CurrentState _state;
+
+    public Role role = Role.None;
+    public State CurrentState { get; private set; }
+
     [SerializeField]
     private CapsuleCollider _target;
 
     private bool _hasTarget = false;
-    private bool _reachedTarget = false;
+    private bool _reachedTarget = true;
 
-    private const float WANDER_DISTANCE = 1.5f;
-    private const float WANDER_SPEED = 0.67f;
-    private const float WANDER_WAIT_TIME = 2f;
+    [SerializeField]
+    private float WALK_SPEED = 0.67f;
 
-    public bool isKiller = false;
+    [SerializeField]
+    private float WANDER_DISTANCE = 1.5f;
+
+    [SerializeField]
+    private float WANDER_WAIT_TIME = 5f;
+    [SerializeField]
+    private float WANDER_WAIT_TIME_VARIANCE = 1f;
+
+    private float _currentWaitTime = 0f;
+    private float _targetWaitTime = 0f;
+
+    public Transform InspectionTarget { get; private set; }
 
     public void SetWander()
     {
-        _state = CurrentState.Wander;
+        CurrentState = State.Wander;
+        _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
+        _currentWaitTime = Random.Range(0f, _targetWaitTime);
     }
     public void SetPaused()
     {
-        _state = CurrentState.Idle;
+        CurrentState = State.Idle;
     }
     public void SetInspect(Transform target)
     {
-        _state = CurrentState.Inspect;
+        CurrentState = State.Inspect;
+        InspectionTarget = target;
+
         _target.transform.position = target.position;
+        _reachedTarget = false;
+        _hasTarget = true;
     }
     public void SetTalk(PartyGoer target)
     {
-        _state = CurrentState.Talk;
+        CurrentState = State.Talk;
         var pos = (transform.position + target.transform.position) * 0.5f;
         _target.transform.position = pos;
+        _reachedTarget = false;
+        _hasTarget = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        switch (_state)
+        switch (CurrentState)
         {
-            case CurrentState.Wander:
+            case State.Wander:
                 Wander();
                 break;
-            case CurrentState.Inspect:
-            case CurrentState.Talk:
+            case State.Inspect:
+            case State.Talk:
                 MoveToTarget();
                 break;
-            case CurrentState.Idle:
+            case State.Idle:
                 break;
         }
     }
 
     private void Wander()
     {
+        if (_currentWaitTime < _targetWaitTime)
+        {
+            _currentWaitTime += Time.deltaTime;
+            return;
+        }
+
         if (!_hasTarget)
         {
             Vector3 point = GetPointAtDistanceAway(WANDER_DISTANCE);
@@ -73,9 +107,10 @@ public class PartyGoer : MonoBehaviour
 
             _target.transform.position = point;
             _hasTarget = true;
+            _reachedTarget = false;
         }
 
-        transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WANDER_SPEED * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WALK_SPEED * Time.deltaTime);
     }
 
     private void MoveToTarget()
@@ -83,7 +118,7 @@ public class PartyGoer : MonoBehaviour
         if (!_hasTarget || _reachedTarget)
             return;
 
-        transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WANDER_SPEED * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WALK_SPEED * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -91,18 +126,9 @@ public class PartyGoer : MonoBehaviour
         if (other != _target || !_hasTarget)
             return;
 
+        _currentWaitTime = 0;
+        _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
         _reachedTarget = true;
-
-        if (_state == CurrentState.Wander)
-            StartCoroutine(DelayRetarget(WANDER_WAIT_TIME));
-        else
-            _hasTarget = false;
-    }
-
-    private IEnumerator DelayRetarget(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        _reachedTarget = false;
         _hasTarget = false;
     }
 

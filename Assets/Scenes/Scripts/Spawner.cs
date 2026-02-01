@@ -11,7 +11,19 @@ public class Spawner : MonoBehaviour
 
     public void Init()
     {
+        if (PARTY_SIZE < 2)
+        {
+            Debug.LogError("Party Size must be at least 2!");
+            return;
+        }
+
         int killerIndex = Random.Range(0, PARTY_SIZE);
+        int victimIndex = killerIndex;
+        while (victimIndex == killerIndex)
+        {
+            victimIndex = Random.Range(0, PARTY_SIZE);
+        }
+
         for (int i = 0; i < PARTY_SIZE; i++)
         {
             var pos = Game.Room.RandomPointInside;
@@ -19,7 +31,10 @@ public class Spawner : MonoBehaviour
             newGO.transform.position = pos;
 
             var newPartygoer = newGO.GetComponentInChildren<PartyGoer>();
-            newPartygoer.isKiller = i == killerIndex;
+            if (i == killerIndex)
+                newPartygoer.role = PartyGoer.Role.Killer;
+            if (i == victimIndex)
+                newPartygoer.role = PartyGoer.Role.Victim;
             Game.PartyGoers.Add(newPartygoer);
         }
     }
