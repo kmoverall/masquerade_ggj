@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5517914135203217305}
   - component: {fileID: 6912135471297079191}
+  - component: {fileID: 1499565566273535845}
+  - component: {fileID: 6831793051319173185}
   m_Layer: 3
   m_Name: Sprite
   m_TagString: Untagged
@@ -26,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 877437095958287841}
   serializedVersion: 2
   m_LocalRotation: {x: 0.60876137, y: -0, z: -0, w: 0.7933534}
-  m_LocalPosition: {x: 0, y: 0.242, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalPosition: {x: 0, y: 0, z: -0.289}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6773511514413469464}
@@ -81,8 +83,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Sprite: {fileID: -1419291009, guid: 695c967589d4e6e4bac1e0ff36703c2e, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -91,6 +93,36 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &1499565566273535845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877437095958287841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c29cff538c195c249b69c6f2236de67b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteLibrary
+  m_Library: []
+  m_SpriteLibraryAsset: {fileID: 7108339969198208228, guid: c0cf347ab87d7bb4ea9c1f6e68de1498, type: 3}
+--- !u!114 &6831793051319173185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 877437095958287841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed8b1ae4e4e52b34ea557c1c11e076fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.2D.Animation.Runtime::UnityEngine.U2D.Animation.SpriteResolver
+  m_CategoryHash: 7.0356636e-15
+  m_labelHash: 0.00000040954276
+  m_SpriteKey: 0
+  m_SpriteHash: 468154530
 --- !u!1 &2217153328272557378
 GameObject:
   m_ObjectHideFlags: 0
@@ -196,6 +228,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PartyGoer
   role: 0
   _target: {fileID: 2287429737246636890}
+  _animator: {fileID: 2151914738567793736}
+  _spriteLibrary: {fileID: 1499565566273535845}
+  _spriteVariations:
+  - {fileID: 7108339969198208228, guid: c0cf347ab87d7bb4ea9c1f6e68de1498, type: 3}
+  - {fileID: 7108339969198208228, guid: 6d5155e4ce111a241b260628f2cffb61, type: 3}
+  - {fileID: 7108339969198208228, guid: bfca3c172be337c4fb7c7444c2e69b70, type: 3}
+  - {fileID: 7108339969198208228, guid: 68024bae7e8ff094c8d4eebf946ae8ec, type: 3}
+  - {fileID: 7108339969198208228, guid: a7dbcfef29847794584252b0cbe13803, type: 3}
   WALK_SPEED: 0.67
   WANDER_DISTANCE: 1.5
   WANDER_WAIT_TIME: 5
@@ -221,9 +261,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.25
-  m_Height: 1
+  m_Height: 1.2
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.55, z: 0}
 --- !u!54 &95561483461119301
 Rigidbody:
   m_ObjectHideFlags: 0

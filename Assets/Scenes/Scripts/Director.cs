@@ -101,12 +101,12 @@ public class Director : MonoBehaviour
         {
             Game.PartyGoers[target].SetWander();
         }
-        else if (rand < _wanderWeight + _inspectWeight)
+        else if (rand < _wanderWeight + _inspectWeight && Game.PartyGoers[target].CurrentState != PartyGoer.State.Inspect)
         {
             int objRand = Random.Range(0, Game.Interactables.Count);
             Game.PartyGoers[target].SetInspect(Game.Interactables[objRand]);
         }
-        else
+        else if (Game.PartyGoers[target].CurrentState != PartyGoer.State.Talk)
         {
             int talkTarget = target;
             while (talkTarget == target || activated.Contains(rand))
@@ -118,6 +118,10 @@ public class Director : MonoBehaviour
             Game.PartyGoers[talkTarget].SetTalk(Game.PartyGoers[target]);
 
             activated.Add(talkTarget);
+        }
+        else
+        {
+            Game.PartyGoers[target].SetWander();
         }
 
         activated.Add(target);
