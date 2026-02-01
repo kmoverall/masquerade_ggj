@@ -4,6 +4,8 @@ using System;
 
 public static class Game
 {
+    public static MurderTracker.MurderMethod MurderMethod;
+
     public static Room Room;
     public static Spawner Spawner;
     public static List<PartyGoer> PartyGoers = new();

@@ -4,11 +4,18 @@ using System;
 
 public class MurderTracker : MonoBehaviour
 {
+    public enum MurderMethod
+    {
+        Chandelier,
+        Poison
+    }
+
     [Serializable]
     public struct MurderScenario
     {
         public List<Transform> PrepSteps;
         public Transform BoobyTrap;
+        public MurderMethod MurderMethod;
     }
 
     [SerializeField]
@@ -19,6 +26,7 @@ public class MurderTracker : MonoBehaviour
     private void Start()
     {
         _scenario = _scenarios.GetRandom();
+        Game.MurderMethod = _scenario.MurderMethod;
         Game.InteractionHappened += CheckForMurderProgress;
         Game.ConversationHappened += CheckForMurderProgress;
         Game.AccusationMade += AccuseTarget;

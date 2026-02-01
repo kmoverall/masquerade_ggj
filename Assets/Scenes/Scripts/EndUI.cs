@@ -3,6 +3,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class EndUI : MonoBehaviour
 {
@@ -11,6 +12,13 @@ public class EndUI : MonoBehaviour
 
     [SerializeField]
     private Button _replay;
+    [SerializeField]
+    private List<AudioSource> _audioSources;
+
+    public void PlayAudio(int index)
+    {
+        _audioSources[index].Play();
+    }
 
     public void SetReason(string text)
     {
