@@ -1,7 +1,7 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.U2D.Animation;
 
 public class PartyGoer : MonoBehaviour, IPointerClickHandler
 {
@@ -25,6 +25,12 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     [SerializeField]
     private CapsuleCollider _target;
+    [SerializeField]
+    private Animator _animator;
+    [SerializeField]
+    private SpriteLibrary _spriteLibrary;
+    [SerializeField]
+    private List<SpriteLibraryAsset> _spriteVariations;
 
     private bool _hasTarget = false;
     private bool _reachedTarget = true;
@@ -48,8 +54,16 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
 
     private int MAX_RAND_ATTEMPTS = 100;
 
+
+
     public Transform InspectionTarget { get; private set; }
     public PartyGoer TalkTarget { get; private set; }
+
+    public void SelectVisuals()
+    {
+        int index = Random.Range(0, _spriteVariations.Count);
+        _spriteLibrary.spriteLibraryAsset = _spriteVariations[index];
+    }
 
     public void SetWander()
     {
@@ -104,6 +118,8 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
     {
         if (_currentWaitTime < _targetWaitTime)
         {
+            _animator.SetBool("IsInspecting", false);
+            _animator.SetBool("IsWalking", false);
             _currentWaitTime += Time.deltaTime;
             return;
         }
@@ -125,6 +141,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
             _reachedTarget = false;
         }
 
+        _animator.SetBool("IsInspecting", false);
+        _animator.SetBool("IsWalking", true);
+        _animator.SetFloat("XVel", _target.transform.position.x - transform.position.x);
+        _animator.SetFloat("YVel", _target.transform.position.z - transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WALK_SPEED * Time.deltaTime);
     }
 
@@ -132,6 +152,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
     {
         if (!_inspectionComplete && _reachedTarget)
         {
+            _animator.SetBool("IsWalking", false);
+            if (CurrentState == State.Inspect)
+                _animator.SetBool("IsInspecting", true);
+
             if (_currentWaitTime < INSPECT_TIME)
             {
                 _currentWaitTime += Time.deltaTime;
@@ -141,7 +165,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
             {
                 _inspectionComplete = true;
                 if (CurrentState == State.Inspect)
+                {
+                    _animator.SetBool("IsInspecting", false);
                     Game.InteractionHappened?.Invoke(this, InspectionTarget);
+                }
                 else if (CurrentState == State.Talk)
                     Game.ConversationHappened?.Invoke(this, TalkTarget);
                 return;
@@ -151,6 +178,10 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
         if (!_hasTarget || _reachedTarget)
             return;
 
+        _animator.SetBool("IsInspecting", false);
+        _animator.SetBool("IsWalking", true);
+        _animator.SetFloat("XVel", _target.transform.position.x - transform.position.x);
+        _animator.SetFloat("YVel", _target.transform.position.z - transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, _target.transform.position, WALK_SPEED * Time.deltaTime);
     }
 
@@ -163,6 +194,8 @@ public class PartyGoer : MonoBehaviour, IPointerClickHandler
         _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
         _reachedTarget = true;
         _hasTarget = false;
+        _animator.SetBool("IsWalking", false);
+        _animator.SetBool("IsInspecting", CurrentState == State.Inspect);
     }
 
     private Vector3 GetPointAtDistanceAway(float distance)

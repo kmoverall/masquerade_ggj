@@ -31,6 +31,7 @@ public class Spawner : MonoBehaviour
             newGO.transform.position = pos;
 
             var newPartygoer = newGO.GetComponentInChildren<PartyGoer>();
+            newPartygoer.SelectVisuals();
             if (i == killerIndex)
             {
                 newPartygoer.role = PartyGoer.Role.Killer;

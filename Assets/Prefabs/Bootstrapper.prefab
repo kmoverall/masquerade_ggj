@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5859071799039507899}
   - component: {fileID: 1431204892903914332}
   - component: {fileID: 5179884346612639740}
+  - component: {fileID: 738354107127530942}
   m_Layer: 0
   m_Name: Bootstrapper
   m_TagString: Untagged
@@ -88,3 +89,18 @@ MonoBehaviour:
   _wanderWeight: 7
   _inspectWeight: 2
   _talkWeight: 1
+--- !u!114 &738354107127530942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7377501063886646926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9c90f6dd4c7ace42bdbdec12a7d4851, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MurderTracker
+  _scenario:
+    PrepSteps: []
+    BoobyTrap: {fileID: 0}

@@ -86,8 +86,7 @@ public class Director : MonoBehaviour
 
         for (int i = 0; i < targets.Count; i++)
         {
-            if (Game.PartyGoers[i].role != PartyGoer.Role.Killer)
-                DirectGuest(i, activated);
+            DirectGuest(i, activated);
         }
     }
 
@@ -96,28 +95,61 @@ public class Director : MonoBehaviour
         if (activated.Contains(target))
             return;
 
+        PartyGoer guest = Game.PartyGoers[target];
         int rand = Random.Range(0, _wanderWeight + _inspectWeight + _talkWeight);
         if (rand < _wanderWeight)
         {
-            Game.PartyGoers[target].SetWander();
+            guest.SetWander();
         }
-        else if (rand < _wanderWeight + _inspectWeight)
+        else if (rand < _wanderWeight + _inspectWeight && Game.PartyGoers[target].CurrentState != PartyGoer.State.Inspect)
         {
-            int objRand = Random.Range(0, Game.Interactables.Count);
-            Game.PartyGoers[target].SetInspect(Game.Interactables[objRand]);
+            if (guest.role == PartyGoer.Role.Killer && Game.MurderTracker.IsPreparing)
+            {
+                guest.SetInspect(Game.MurderTracker.NextTarget);
+            }
+            else if (guest.role == PartyGoer.Role.Victim && Game.MurderTracker.IsKillNext)
+            {
+                guest.SetInspect(Game.MurderTracker.NextTarget);
+            }
+            else
+            {
+                int objRand = Random.Range(0, Game.Interactables.Count);
+                guest.SetInspect(Game.Interactables[objRand]);
+            }
+        }
+        else if (Game.PartyGoers[target].CurrentState != PartyGoer.State.Talk)
+        {
+            if (guest.role == PartyGoer.Role.Killer && Game.MurderTracker.IsVictimNext)
+            {
+                guest.SetTalk(Game.Victim);
+                Game.Victim.SetTalk(guest);
+                
+                for (int i = 0; i < Game.PartyGoers.Count; i++)
+                {
+                    if (Game.PartyGoers[i] == Game.Victim)
+                    {
+                        activated.Add(i);
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                int talkTarget = target;
+                while (talkTarget == target || activated.Contains(rand))
+                {
+                    talkTarget = Random.Range(0, Game.PartyGoers.Count);
+                }
+
+                guest.SetTalk(Game.PartyGoers[talkTarget]);
+                Game.PartyGoers[talkTarget].SetTalk(guest);
+
+                activated.Add(talkTarget);
+            }
         }
         else
         {
-            int talkTarget = target;
-            while (talkTarget == target || activated.Contains(rand))
-            {
-                talkTarget = Random.Range(0, Game.PartyGoers.Count);
-            }
-            
-            Game.PartyGoers[target].SetTalk(Game.PartyGoers[talkTarget]);
-            Game.PartyGoers[talkTarget].SetTalk(Game.PartyGoers[target]);
-
-            activated.Add(talkTarget);
+            guest.SetWander();
         }
 
         activated.Add(target);
