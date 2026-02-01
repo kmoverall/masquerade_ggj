@@ -12,6 +12,8 @@ public static class Game
     public static Director Director;
     public static List<Transform> Interactables;
     public static MurderTracker MurderTracker;
+    public static List<Transform> MurderSteps = new();
+    public static int MurderProgress = 0;
 
     public static Action<PartyGoer, Transform> InteractionHappened;
 }

@@ -14,15 +14,14 @@ public class MurderTracker : MonoBehaviour
     [SerializeField]
     private MurderScenario _scenario;
 
-    private Dictionary<Transform, bool> _checklist = new();
-
     private void Start()
     {
         Game.InteractionHappened += CheckForMurderProgress;
-        foreach (var t in _scenario.PrepSteps)
-        {
-            _checklist.Add(t, false);
-        }
+        var murderSteps = _scenario.PrepSteps;
+        murderSteps.Shuffle();
+        murderSteps.Add(_scenario.BoobyTrap);
+
+        Game.MurderSteps = murderSteps;
     }
 
     private void CheckForMurderProgress(PartyGoer partyGoer, Transform target)
@@ -30,10 +29,8 @@ public class MurderTracker : MonoBehaviour
         if (partyGoer.role != PartyGoer.Role.Killer)
             return;
 
-        if (_scenario.PrepSteps.Contains(target))
-        {
-            _checklist[target] = true;
-        }
+        if (target == Game.MurderSteps[Game.MurderProgress])
+            Game.MurderProgress++;
     }
 
     private void OnDestroy()

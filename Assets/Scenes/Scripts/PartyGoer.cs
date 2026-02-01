@@ -1,8 +1,9 @@
 using NUnit.Framework;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class PartyGoer : MonoBehaviour
+public class PartyGoer : MonoBehaviour, IPointerClickHandler
 {
     public enum Role
     {
@@ -45,6 +46,8 @@ public class PartyGoer : MonoBehaviour
     private float _currentWaitTime = 0f;
     private float _targetWaitTime = 0f;
 
+    private int MAX_RAND_ATTEMPTS = 100;
+
     public Transform InspectionTarget { get; private set; }
 
     public void SetWander()
@@ -62,9 +65,14 @@ public class PartyGoer : MonoBehaviour
     public void SetInspect(Transform target)
     {
         CurrentState = State.Inspect;
+        if (role == Role.Killer)
+        {
+            target = Game.MurderSteps[Game.MurderProgress];
+        }
+
         InspectionTarget = target;
 
-        _target.transform.position = target.position;
+        _target.transform.position = InspectionTarget.position;
         _reachedTarget = false;
         _hasTarget = true;
         _inspectionComplete = false;
@@ -79,7 +87,6 @@ public class PartyGoer : MonoBehaviour
         _hasTarget = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         switch (CurrentState)
@@ -107,10 +114,14 @@ public class PartyGoer : MonoBehaviour
         if (!_hasTarget)
         {
             Vector3 point = GetPointAtDistanceAway(WANDER_DISTANCE);
-            while (!Game.Room.IsInside(point))
+            int attempts = 0;
+            while (!Game.Room.IsInside(point) && attempts < MAX_RAND_ATTEMPTS)
             {
                 point = GetPointAtDistanceAway(WANDER_DISTANCE);
             }
+
+            if (attempts >= MAX_RAND_ATTEMPTS)
+                return;
 
             _target.transform.position = point;
             _hasTarget = true;
@@ -122,18 +133,17 @@ public class PartyGoer : MonoBehaviour
 
     private void MoveToTarget()
     {
-        if (CurrentState == State.Inspect && !_inspectionComplete)
+        if (CurrentState == State.Inspect && !_inspectionComplete && _reachedTarget)
         {
-            if (_reachedTarget && _currentWaitTime < INSPECT_TIME)
+            if (_currentWaitTime < INSPECT_TIME)
             {
                 _currentWaitTime += Time.deltaTime;
                 return;
             }
-
-            if (_reachedTarget && _currentWaitTime >= INSPECT_TIME)
+            else
             {
                 _inspectionComplete = true;
-                Game.InteractionHappened(this, InspectionTarget);
+                Game.InteractionHappened?.Invoke(this, InspectionTarget);
                 return;
             }
         }
@@ -164,5 +174,10 @@ public class PartyGoer : MonoBehaviour
         point3.z += point2.y;
 
         return point3;
+    }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        Debug.Log("Clicked!");
     }
 }
