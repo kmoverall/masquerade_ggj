@@ -1,4 +1,4 @@
-using UnityEditor.Search;
+
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -35,6 +35,7 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 0;
         _victoryScreen.gameObject.SetActive(true);
+        _victoryScreen.PlayAudio(0);
 
     }
 
@@ -49,7 +50,17 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 0;
         _gameOverScreen.gameObject.SetActive(true);
-        _gameOverScreen.SetReason("The killer has succeeded in his plan");
+
+        if (Game.MurderMethod == MurderTracker.MurderMethod.Chandelier)
+        {
+            _gameOverScreen.SetReason("The victim has been crushed by a chandelier");
+            _victoryScreen.PlayAudio(0);
+        }
+        else
+        {
+            _gameOverScreen.SetReason("The victim has died of poisoning");
+            _victoryScreen.PlayAudio(1);
+        }
     }
 
     private void OnDestroy()
