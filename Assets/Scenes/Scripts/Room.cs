@@ -13,7 +13,8 @@ public class Room : MonoBehaviour
 
     public bool IsInside(Vector3 point)
     {
-        return Bounds.Contains(point);
+        return point.x >= Bounds.min.x && point.x <= Bounds.max.x &&
+               point.z >= Bounds.min.z && point.z <= Bounds.max.z;
     }
 
     void OnDrawGizmosSelected()

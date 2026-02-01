@@ -1,6 +1,6 @@
-using System.Collections;
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class PartyGoer : MonoBehaviour
 {
@@ -27,6 +27,7 @@ public class PartyGoer : MonoBehaviour
 
     private bool _hasTarget = false;
     private bool _reachedTarget = true;
+    private bool _inspectionComplete = false;
 
     [SerializeField]
     private float WALK_SPEED = 0.67f;
@@ -38,6 +39,8 @@ public class PartyGoer : MonoBehaviour
     private float WANDER_WAIT_TIME = 5f;
     [SerializeField]
     private float WANDER_WAIT_TIME_VARIANCE = 1f;
+    [SerializeField]
+    private float INSPECT_TIME = 3f;
 
     private float _currentWaitTime = 0f;
     private float _targetWaitTime = 0f;
@@ -50,10 +53,12 @@ public class PartyGoer : MonoBehaviour
         _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
         _currentWaitTime = Random.Range(0f, _targetWaitTime);
     }
+
     public void SetPaused()
     {
         CurrentState = State.Idle;
     }
+
     public void SetInspect(Transform target)
     {
         CurrentState = State.Inspect;
@@ -62,7 +67,9 @@ public class PartyGoer : MonoBehaviour
         _target.transform.position = target.position;
         _reachedTarget = false;
         _hasTarget = true;
+        _inspectionComplete = false;
     }
+
     public void SetTalk(PartyGoer target)
     {
         CurrentState = State.Talk;
@@ -115,6 +122,22 @@ public class PartyGoer : MonoBehaviour
 
     private void MoveToTarget()
     {
+        if (CurrentState == State.Inspect && !_inspectionComplete)
+        {
+            if (_reachedTarget && _currentWaitTime < INSPECT_TIME)
+            {
+                _currentWaitTime += Time.deltaTime;
+                return;
+            }
+
+            if (_reachedTarget && _currentWaitTime >= INSPECT_TIME)
+            {
+                _inspectionComplete = true;
+                Game.InteractionHappened(this, InspectionTarget);
+                return;
+            }
+        }
+
         if (!_hasTarget || _reachedTarget)
             return;
 
@@ -125,7 +148,7 @@ public class PartyGoer : MonoBehaviour
     {
         if (other != _target || !_hasTarget)
             return;
-
+            
         _currentWaitTime = 0;
         _targetWaitTime = Random.Range(WANDER_WAIT_TIME - WANDER_WAIT_TIME_VARIANCE, WANDER_WAIT_TIME + WANDER_WAIT_TIME_VARIANCE);
         _reachedTarget = true;

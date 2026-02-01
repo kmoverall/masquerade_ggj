@@ -32,9 +32,15 @@ public class Spawner : MonoBehaviour
 
             var newPartygoer = newGO.GetComponentInChildren<PartyGoer>();
             if (i == killerIndex)
+            {
                 newPartygoer.role = PartyGoer.Role.Killer;
+                Game.Killer = newPartygoer;
+            }
             if (i == victimIndex)
+            {
                 newPartygoer.role = PartyGoer.Role.Victim;
+                Game.Victim = newPartygoer;
+            }
             Game.PartyGoers.Add(newPartygoer);
         }
     }

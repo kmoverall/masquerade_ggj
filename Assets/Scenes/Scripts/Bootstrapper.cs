@@ -11,6 +11,8 @@ public class Bootstrapper : MonoBehaviour
     private Director _director;
     [SerializeField]
     private List<Transform> _interactables;
+    [SerializeField]
+    private MurderTracker _murderTracker;
 
     void Awake()
     {
@@ -18,6 +20,7 @@ public class Bootstrapper : MonoBehaviour
         Game.Interactables = _interactables;
         Game.Spawner = _spawner;
         Game.Director = _director;
+        Game.MurderTracker = _murderTracker;
 
         _spawner.Init();
         _director.InitializePartyGoers();
