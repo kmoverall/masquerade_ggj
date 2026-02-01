@@ -158,6 +158,7 @@ GameObject:
   - component: {fileID: 2963864713067058306}
   - component: {fileID: 339874105099513075}
   - component: {fileID: 95561483461119301}
+  - component: {fileID: 2151914738567793736}
   m_Layer: 3
   m_Name: MainTransform
   m_TagString: Untagged
@@ -193,7 +194,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db1d74296d097b340babb8a0d2839b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PartyGoer
+  role: 0
   _target: {fileID: 2287429737246636890}
+  WALK_SPEED: 0.67
+  WANDER_DISTANCE: 1.5
+  WANDER_WAIT_TIME: 5
+  WANDER_WAIT_TIME_VARIANCE: 1
+  INSPECT_TIME: 3
 --- !u!136 &339874105099513075
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -244,6 +251,28 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!95 &2151914738567793736
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5335132021247293337}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4a91ee3f916ed7949ba3aa9ac8195ff6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6851627171861416295
 GameObject:
   m_ObjectHideFlags: 0
