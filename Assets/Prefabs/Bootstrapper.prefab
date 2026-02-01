@@ -55,7 +55,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  _murderTracker: {fileID: 0}
+  _murderTracker: {fileID: 738354107127530942}
 --- !u!114 &1431204892903914332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,6 +101,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9c90f6dd4c7ace42bdbdec12a7d4851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MurderTracker
-  _scenario:
-    PrepSteps: []
-    BoobyTrap: {fileID: 0}
+  _scenarios: []
